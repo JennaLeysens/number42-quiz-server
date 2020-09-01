@@ -9,6 +9,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       round.belongsTo(models.quiz);
+      round.hasMany(models.answer);
     }
   }
   round.init(
