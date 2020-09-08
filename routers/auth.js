@@ -21,7 +21,7 @@ router.post("/login", async (req, res, next) => {
 
     if (!user || !bcrypt.compareSync(password, user.password)) {
       return res.status(400).send({
-        message: "User with that email not found or password incorrect"
+        message: "User with that email not found or password incorrect",
       });
     }
 
@@ -44,7 +44,7 @@ router.post("/signup", async (req, res) => {
     const newUser = await User.create({
       email,
       password: bcrypt.hashSync(password, SALT_ROUNDS),
-      name
+      name,
     });
 
     delete newUser.dataValues["password"]; // don't send back the password hash
@@ -60,6 +60,28 @@ router.post("/signup", async (req, res) => {
     }
 
     return res.status(400).send({ message: "Something went wrong, sorry" });
+  }
+});
+
+router.post("/", async (req, res) => {
+  try {
+    const user = req.user;
+    const { edition, date, team } = req.body;
+
+    const newQuiz = await Quiz.create({
+      edition,
+      date,
+      team,
+    });
+    if (!edition || !date) {
+      return res
+        .status(400)
+        .send({ message: "Please complete all the fields to create a quiz" });
+    }
+    res.status(201).send({ message: "Quiz added", newQuiz });
+  } catch (e) {
+    console.log(e.message);
+    next(e);
   }
 });
 
