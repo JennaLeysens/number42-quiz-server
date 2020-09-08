@@ -67,11 +67,10 @@ router.post("/", async (req, res) => {
   try {
     const user = req.user;
     const { edition, date, team } = req.body;
-
     const newQuiz = await Quiz.create({
-      edition,
+      editionNumber,
       date,
-      team,
+      teamMembers,
     });
     if (!edition || !date) {
       return res
