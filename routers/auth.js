@@ -72,6 +72,7 @@ router.post("/", authMiddleware, async (req, res) => {
       editionNumber,
       date,
       teamMembers,
+      userId: user.id,
     });
     if (!editionNumber || !date || !teamMembers) {
       return res
