@@ -73,7 +73,7 @@ router.post("/", authMiddleware, async (req, res) => {
       date,
       teamMembers,
     });
-    if (!editionNumber || !date) {
+    if (!editionNumber || !date || !teamMembers) {
       return res
         .status(400)
         .send({ message: "Please complete all the fields to create a quiz" });
