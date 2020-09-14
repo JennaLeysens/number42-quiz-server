@@ -15,7 +15,7 @@ module.exports = {
         type: Sequelize.STRING,
       },
       teamMembers: {
-        type: Sequelize.TEXT,
+        type: Sequelize.ARRAY(Sequelize.STRING),
       },
       createdAt: {
         allowNull: false,
