@@ -3,6 +3,7 @@ const { Router } = require("express");
 const { toJWT } = require("../auth/jwt");
 const authMiddleware = require("../auth/middleware");
 const User = require("../models/").user;
+const Round = require("../models/").round;
 const { SALT_ROUNDS } = require("../config/constants");
 const Quiz = require("../models").quiz;
 
@@ -69,10 +70,7 @@ router.post("/", authMiddleware, async (req, res) => {
     const user = req.user;
     const { editionNumber, date, teamMembers } = req.body;
     const newQuiz = await Quiz.create({
-      editionNumber,
-      date,
-      teamMembers,
-      userId: user.id,
+
     });
     if (!editionNumber || !date || !teamMembers) {
       return res
@@ -80,6 +78,26 @@ router.post("/", authMiddleware, async (req, res) => {
         .send({ message: "Please complete all the fields to create a quiz" });
     }
     res.status(201).send({ message: "Quiz added", newQuiz });
+  } catch (e) {
+    console.log(e.message);
+    next(e);
+  }
+});
+
+router.post("/round", async (req, res) => {
+  try {
+    const user = req.user;
+    const { round } = req.body;
+
+    const newRound = await Round.create({
+      round,
+    });
+    if (!round) {
+      return res
+        .status(400)
+        .send({ message: "Please complete all the fields to create a quiz" });
+    }
+    res.status(201).send({ message: "Round added", newRound });
   } catch (e) {
     console.log(e.message);
     next(e);
