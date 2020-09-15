@@ -5,6 +5,7 @@ const authMiddleware = require("../auth/middleware");
 const User = require("../models/").user;
 const { SALT_ROUNDS } = require("../config/constants");
 const Quiz = require("../models").quiz;
+const Round = require("../models").round;
 
 const router = new Router();
 
@@ -80,6 +81,25 @@ router.post("/", authMiddleware, async (req, res) => {
         .send({ message: "Please complete all the fields to create a quiz" });
     }
     res.status(201).send({ message: "Quiz added", newQuiz });
+  } catch (e) {
+    console.log(e.message);
+    next(e);
+  }
+});
+
+router.post("/round", authMiddleware, async (req, res) => {
+  try {
+    const user = req.user;
+    const { round } = req.body;
+    const newRound = await Round.create({
+      round,
+    });
+    if (!round) {
+      return res
+        .status(400)
+        .send({ message: "Please complete all the fields to create a quiz" });
+    }
+    res.status(201).send({ message: "Round added", newRound });
   } catch (e) {
     console.log(e.message);
     next(e);
