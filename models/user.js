@@ -10,6 +10,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       user.hasMany(models.quiz);
+      user.hasMany(models.round);
+      user.hasMany(models.answer);
     }
   }
   user.init(
