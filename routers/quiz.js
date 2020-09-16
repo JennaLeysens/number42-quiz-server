@@ -21,7 +21,7 @@ router.get("/:id", async (req, res, next) => {
         message: "Quiz not found",
       });
     }
-    res.json(recipe);
+    res.json(quiz);
   } catch (e) {
     console.log(e.message);
     next(e);

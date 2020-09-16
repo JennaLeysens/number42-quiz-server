@@ -152,7 +152,7 @@ app.post("/authorized_post_request", authMiddleWare, (req, res) => {
 });
 
 app.use("/", authRouter);
-app.use("/quizzes", quizRouter);
+// app.use("/quizzes", quizRouter);
 
 // Listen for connections on specified port (default is port 4000)
 
