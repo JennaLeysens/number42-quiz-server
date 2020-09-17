@@ -92,13 +92,13 @@ router.post("/", authMiddleware, async (req, res) => {
 
 router.post("/round", authMiddleware, async (req, res) => {
   try {
-    const user = req.user;
-    const { round, quizId } = req.body;
+    const { roundNumber, quizId } = req.body;
+    console.log(req.body);
     const newRound = await Round.create({
-      round,
+      roundNumber,
       quizId,
     });
-    if (!round) {
+    if (!roundNumber) {
       return res
         .status(400)
         .send({ message: "Please complete all the fields to create a quiz" });
