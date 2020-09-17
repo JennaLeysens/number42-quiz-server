@@ -92,12 +92,13 @@ router.post("/", authMiddleware, async (req, res) => {
 
 router.post("/round", authMiddleware, async (req, res) => {
   try {
-    const user = req.user;
-    const { round } = req.body;
+    const { roundNumber, quizId } = req.body;
+    console.log(req.body);
     const newRound = await Round.create({
-      round,
+      roundNumber,
+      quizId,
     });
-    if (!round) {
+    if (!roundNumber) {
       return res
         .status(400)
         .send({ message: "Please complete all the fields to create a quiz" });
@@ -113,9 +114,10 @@ router.post("/round", authMiddleware, async (req, res) => {
 // - get the users email & name using only their token
 // - checking if a token is (still) valid
 router.get("/me", authMiddleware, async (req, res) => {
-  // don't send back the password hash
+  const quizzes = await Quiz.findAll({ where: { userId: req.user.id } });
+
   delete req.user.dataValues["password"];
-  res.status(200).send({ ...req.user.dataValues });
+  res.status(200).send({ ...req.user.dataValues, quizzes });
 });
 
 module.exports = router;
