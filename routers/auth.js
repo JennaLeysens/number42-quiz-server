@@ -6,6 +6,7 @@ const User = require("../models/").user;
 const { SALT_ROUNDS } = require("../config/constants");
 const Quiz = require("../models").quiz;
 const Round = require("../models").round;
+const Answer = require("../models").answer;
 
 const router = new Router();
 
@@ -104,6 +105,27 @@ router.post("/round", authMiddleware, async (req, res) => {
         .send({ message: "Please complete all the fields to create a quiz" });
     }
     res.status(201).send({ message: "Round added", newRound });
+  } catch (e) {
+    console.log(e.message);
+    next(e);
+  }
+});
+
+router.post("/answer", authMiddleware, async (req, res) => {
+  try {
+    const { roundNumber, quizId, answer } = req.body;
+    console.log(req.body);
+    const newAnswer = await Answer.create({
+      roundNumber,
+      quizId,
+      answer,
+    });
+    if (!answer) {
+      return res
+        .status(400)
+        .send({ message: "Please complete all the fields to create a quiz" });
+    }
+    res.status(201).send({ message: "Answer added", newAnswer });
   } catch (e) {
     console.log(e.message);
     next(e);
