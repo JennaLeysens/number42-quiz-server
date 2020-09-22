@@ -119,6 +119,7 @@ router.post("/answer", authMiddleware, async (req, res) => {
       roundNumber,
       quizId,
       answer,
+      points,
     });
     if (!answer) {
       return res
