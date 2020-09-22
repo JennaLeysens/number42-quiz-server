@@ -113,13 +113,13 @@ router.post("/round", authMiddleware, async (req, res) => {
 
 router.post("/answer", authMiddleware, async (req, res) => {
   try {
-    const { roundNumber, quizId, answer } = req.body;
+    const { answer, points, roundId, quizId } = req.body;
     console.log(req.body);
     const newAnswer = await Answer.create({
-      roundNumber,
-      quizId,
       answer,
       points,
+      roundId,
+      quizId,
     });
     if (!answer) {
       return res
