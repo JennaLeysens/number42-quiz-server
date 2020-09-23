@@ -9,6 +9,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       answer.belongsTo(models.round);
+      answer.belongsTo(models.quiz);
     }
   }
   answer.init(

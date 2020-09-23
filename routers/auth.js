@@ -115,12 +115,15 @@ router.post("/answer", authMiddleware, async (req, res) => {
   try {
     const { answer, points, roundId, quizId } = req.body;
     console.log(req.body);
-    const newAnswer = await Answer.create({
-      answer,
-      points,
-      roundId,
-      quizId,
-    });
+    const newAnswer = await Answer.create(
+      {
+        answer,
+        points,
+        roundId,
+        quizId,
+      },
+      { returning: true }
+    );
     if (!answer) {
       return res
         .status(400)
