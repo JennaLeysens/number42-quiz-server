@@ -22,7 +22,6 @@ router.post("/login", async (req, res, next) => {
 
     const user = await User.findOne({
       where: { email },
-      include: { model: Quiz },
     });
 
     if (!user || !bcrypt.compareSync(password, user.password)) {
@@ -136,6 +135,44 @@ router.post("/answer", authMiddleware, async (req, res) => {
   }
 });
 
+router.get("/quizzes", authMiddleware, async (req, res, next) => {
+  try {
+    const user = req.user;
+    const quizzes = await Quiz.findAll({ where: { userId: user.id } });
+    if (!quizzes) {
+      return res.status(401).send({
+        message: "Quizzes not found",
+      });
+    }
+    res.json(quizzes);
+  } catch (e) {
+    console.log(e.message);
+    next(e);
+  }
+});
+
+router.get("/quizzes/:id", authMiddleware, async (req, res, next) => {
+  try {
+    const id = parseInt(req.params.id);
+    console.log(id);
+    const quiz = await Quiz.findByPk(id, {
+      include: {
+        model: Answer,
+      },
+    });
+    console.log(quiz);
+    if (!quiz) {
+      return res.status(401).send({
+        message: "Quiz not found",
+      });
+    }
+    res.json(quiz);
+  } catch (e) {
+    console.log(e.message);
+    next(e);
+  }
+});
+
 // The /me endpoint can be used to:
 // - get the users email & name using only their token
 // - checking if a token is (still) valid
@@ -143,7 +180,7 @@ router.get("/me", authMiddleware, async (req, res) => {
   const quizzes = await Quiz.findAll({ where: { userId: req.user.id } });
 
   delete req.user.dataValues["password"];
-  res.status(200).send({ ...req.user.dataValues, quizzes });
+  res.status(200).send({ ...req.user.dataValues });
 });
 
 module.exports = router;
