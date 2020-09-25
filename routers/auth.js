@@ -136,7 +136,7 @@ router.post("/answer", authMiddleware, async (req, res) => {
   }
 });
 
-router.get("/:id", authMiddleware, async (req, res, next) => {
+router.get("/quiz/:id", authMiddleware, async (req, res, next) => {
   try {
     const id = parseInt(req.params.id);
     const quiz = await Quiz.findByPk({
