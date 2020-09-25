@@ -22,7 +22,6 @@ router.post("/login", async (req, res, next) => {
 
     const user = await User.findOne({
       where: { email },
-      include: { model: Quiz },
     });
 
     if (!user || !bcrypt.compareSync(password, user.password)) {
@@ -181,7 +180,7 @@ router.get("/me", authMiddleware, async (req, res) => {
   const quizzes = await Quiz.findAll({ where: { userId: req.user.id } });
 
   delete req.user.dataValues["password"];
-  res.status(200).send({ ...req.user.dataValues, quizzes });
+  res.status(200).send({ ...req.user.dataValues });
 });
 
 module.exports = router;
