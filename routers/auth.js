@@ -156,9 +156,7 @@ router.get("/quizzes/:id", authMiddleware, async (req, res, next) => {
     const id = parseInt(req.params.id);
     console.log(id);
     const quiz = await Quiz.findByPk(id, {
-      include: {
-        model: Answer,
-      },
+      include: [Round, Answer],
     });
     console.log(quiz);
     if (!quiz) {
