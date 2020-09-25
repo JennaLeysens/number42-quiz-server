@@ -136,6 +136,27 @@ router.post("/answer", authMiddleware, async (req, res) => {
   }
 });
 
+router.get("/:id", authMiddleware, async (req, res, next) => {
+  try {
+    const id = parseInt(req.params.id);
+    const quiz = await Quiz.findByPk({
+      where: { userId: req.user.id },
+      include: {
+        model: Answer,
+      },
+    });
+    if (!quiz) {
+      return res.status(401).send({
+        message: "Quiz not found",
+      });
+    }
+    res.json(quiz);
+  } catch (e) {
+    console.log(e.message);
+    next(e);
+  }
+});
+
 // The /me endpoint can be used to:
 // - get the users email & name using only their token
 // - checking if a token is (still) valid
