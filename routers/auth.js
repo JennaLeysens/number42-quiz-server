@@ -136,15 +136,32 @@ router.post("/answer", authMiddleware, async (req, res) => {
   }
 });
 
-router.get("/quiz/:id", authMiddleware, async (req, res, next) => {
+router.get("/quizzes", authMiddleware, async (req, res, next) => {
+  try {
+    const user = req.user;
+    const quizzes = await Quiz.findAll({ where: { userId: user.id } });
+    if (!quizzes) {
+      return res.status(401).send({
+        message: "Quizzes not found",
+      });
+    }
+    res.json(quizzes);
+  } catch (e) {
+    console.log(e.message);
+    next(e);
+  }
+});
+
+router.get("/quizzes/:id", authMiddleware, async (req, res, next) => {
   try {
     const id = parseInt(req.params.id);
-    const quiz = await Quiz.findByPk({
-      where: { userId: req.user.id },
+    console.log(id);
+    const quiz = await Quiz.findByPk(id, {
       include: {
         model: Answer,
       },
     });
+    console.log(quiz);
     if (!quiz) {
       return res.status(401).send({
         message: "Quiz not found",
