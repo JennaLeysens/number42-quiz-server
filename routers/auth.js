@@ -95,7 +95,7 @@ router.post("/round", authMiddleware, async (req, res) => {
     const { roundNumber, quizId } = req.body;
     console.log(req.body);
     const newRound = await Round.create({
-      roundNumber,
+      roundNumber: 1,
       quizId,
     });
     if (!roundNumber) {
