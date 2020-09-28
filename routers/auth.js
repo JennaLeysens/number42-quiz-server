@@ -78,6 +78,9 @@ router.post("/", authMiddleware, async (req, res) => {
       teamMembers,
       userId: user.id,
     });
+    const round = await Round.Create({
+      roundNumber: 1,
+    });
     if (!editionNumber || !date || !teamMembers) {
       return res
         .status(400)
@@ -92,10 +95,10 @@ router.post("/", authMiddleware, async (req, res) => {
 
 router.post("/round", authMiddleware, async (req, res) => {
   try {
-    const { quizId } = req.body;
+    const { quizId, roundNumber } = req.body;
     console.log(req.body);
     const newRound = await Round.create({
-      roundNumber: 1,
+      roundNumber,
       quizId,
     });
     if (!roundNumber) {
