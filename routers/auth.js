@@ -92,7 +92,7 @@ router.post("/", authMiddleware, async (req, res) => {
 
 router.post("/round", authMiddleware, async (req, res) => {
   try {
-    const { roundNumber, quizId } = req.body;
+    const { quizId } = req.body;
     console.log(req.body);
     const newRound = await Round.create({
       roundNumber: 1,
