@@ -72,21 +72,22 @@ router.post("/", authMiddleware, async (req, res) => {
   try {
     const user = req.user;
     const { editionNumber, date, teamMembers } = req.body;
+    if (!editionNumber || !date || !teamMembers) {
+      return res
+        .status(400)
+        .send({ message: "Please complete all the fields to create a quiz" });
+    }
     const newQuiz = await Quiz.create({
       editionNumber,
       date,
       teamMembers,
       userId: user.id,
     });
-    const round = await Round.Create({
+    const round = await Round.create({
       roundNumber: 1,
+      quizId: newQuiz.id,
     });
-    if (!editionNumber || !date || !teamMembers) {
-      return res
-        .status(400)
-        .send({ message: "Please complete all the fields to create a quiz" });
-    }
-    res.status(201).send({ message: "Quiz added", newQuiz });
+    res.status(201).send({ message: "Quiz added", newQuiz, round });
   } catch (e) {
     console.log(e.message);
     next(e);
@@ -95,12 +96,14 @@ router.post("/", authMiddleware, async (req, res) => {
 
 router.post("/round", authMiddleware, async (req, res) => {
   try {
-    const { quizId, roundNumber } = req.body;
-    console.log(req.body);
+    const { quizId } = req.body;
+    const currentQuiz = await Quiz.findByPk(quizId, { include: Round });
     const newRound = await Round.create({
-      quizId,
-      roundNumber,
+      roundNumber: currentQuiz.rounds.length + 1,
+      quizId: currentQuiz.id,
     });
+    console.log("a", roundNumber);
+    console.log("b", newRound);
     if (!roundNumber) {
       return res
         .status(400)
@@ -159,7 +162,7 @@ router.get("/quizzes/:id", authMiddleware, async (req, res, next) => {
     const id = parseInt(req.params.id);
     console.log(id);
     const quiz = await Quiz.findByPk(id, {
-      include: [Round, Answer],
+      include: [{ model: Round, include: Answer }],
     });
     console.log(quiz);
     if (!quiz) {
