@@ -96,12 +96,12 @@ router.post("/", authMiddleware, async (req, res) => {
 
 router.post("/round", authMiddleware, async (req, res) => {
   try {
-    const { quizId, roundNumber } = req.body;
+    const { quizId } = req.body;
     console.log(req.body);
-
+    const currentQuiz = await Quiz.findByPk(quizId, { include: Round });
     const newRound = await Round.create({
-      quizId,
-      roundNumber,
+      quizId: currentQuiz.rounds,
+      roundNumber: Round.length + 1,
     });
     if (!roundNumber) {
       return res
