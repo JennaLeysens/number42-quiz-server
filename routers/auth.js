@@ -102,14 +102,7 @@ router.post("/round", authMiddleware, async (req, res) => {
       roundNumber: currentQuiz.rounds.length + 1,
       quizId: currentQuiz.id,
     });
-    console.log("a", roundNumber);
-    console.log("b", newRound);
-    if (!roundNumber) {
-      return res
-        .status(400)
-        .send({ message: "Please complete all the fields to create a quiz" });
-    }
-    res.status(201).send({ message: "Round added", newRound });
+    return res.status(201).send({ message: "Round added", newRound });
   } catch (e) {
     console.log(e.message);
     next(e);
