@@ -162,7 +162,7 @@ router.get("/quizzes/:id", authMiddleware, async (req, res, next) => {
       include: [
         {
           model: Round,
-          include: [{ model: Answer }],
+          include: { model: Answer },
         },
       ],
     });
