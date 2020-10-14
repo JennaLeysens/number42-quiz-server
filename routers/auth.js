@@ -98,10 +98,14 @@ router.post("/round", authMiddleware, async (req, res) => {
   try {
     const { quizId } = req.body;
     const currentQuiz = await Quiz.findByPk(quizId, { include: Round });
-    const newRound = await Round.create({
-      roundNumber: currentQuiz.rounds.length + 1,
-      quizId: currentQuiz.id,
-    });
+    const newRound = await Round.create(
+      {
+        roundNumber: currentQuiz.rounds.length + 1,
+        quizId: currentQuiz.id,
+      },
+      { returning: true }
+    );
+
     return res.status(201).send({ message: "Round added", newRound });
   } catch (e) {
     console.log(e.message);
@@ -155,11 +159,15 @@ router.get("/quizzes/:id", authMiddleware, async (req, res, next) => {
     const id = parseInt(req.params.id);
     console.log(id);
     const quiz = await Quiz.findByPk(id, {
-      include: [{ model: Round }, { model: Answer }],
+      include: [
+        {
+          model: Round,
+          include: { model: Answer },
+        },
+      ],
     });
-    console.log(quiz);
     if (!quiz) {
-      return res.status(401).send({
+      return res.status(404).send({
         message: "Quiz not found",
       });
     }
