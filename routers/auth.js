@@ -178,6 +178,34 @@ router.get("/quizzes/:id", authMiddleware, async (req, res, next) => {
   }
 });
 
+router.patch("/quizzes/:id", authMiddleware, async (req, res, next) => {
+  try {
+    const id = parseInt(req.params.id);
+    console.log(id);
+    const answer = await Answer.findByPk(id, {});
+    const { answer, points, roundId, quizId } = req.body;
+    console.log(req.body);
+    const updatedAnswer = await Answer.update(
+      {
+        answer,
+        points,
+        roundId,
+        quizId,
+      },
+      { returning: true }
+    );
+    if (!answer) {
+      return res
+        .status(400)
+        .send({ message: "Please complete all the fields update an answer" });
+    }
+    res.status(201).send({ message: "Answer updated", updatedAnswer });
+  } catch (e) {
+    console.log(e.message);
+    next(e);
+  }
+});
+
 // The /me endpoint can be used to:
 // - get the users email & name using only their token
 // - checking if a token is (still) valid
