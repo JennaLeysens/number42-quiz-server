@@ -182,10 +182,10 @@ router.patch("/quizzes/:id", authMiddleware, async (req, res, next) => {
   try {
     const id = parseInt(req.params.id);
     console.log(id);
-    const answer = await Answer.findByPk(id, {});
+    const quizAnswer = await Answer.findByPk(id, {});
     const { answer, points, roundId, quizId } = req.body;
     console.log(req.body);
-    const updatedAnswer = await Answer.update(
+    const updatedAnswer = await quizAnswer.update(
       {
         answer,
         points,
@@ -200,6 +200,25 @@ router.patch("/quizzes/:id", authMiddleware, async (req, res, next) => {
         .send({ message: "Please complete all the fields update an answer" });
     }
     res.status(201).send({ message: "Answer updated", updatedAnswer });
+  } catch (e) {
+    console.log(e.message);
+    next(e);
+  }
+});
+
+router.delete("/quizzes/:id", authMiddleware, async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const user = req.user;
+    const quizAnswer = await Answer.findByPk(id);
+    // if (user.id === quizAnswer.userId) {
+    const deletedAnswer = await quizAnswer.destroy();
+    res.status(201).send({ message: "Answer deleted", deletedAnswer });
+    // } else {
+    //   return res
+    //     .status(400)
+    //     .send("You are not authorized to delete this answer");
+    // }
   } catch (e) {
     console.log(e.message);
     next(e);
