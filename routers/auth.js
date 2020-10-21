@@ -117,6 +117,11 @@ router.post("/answer", authMiddleware, async (req, res) => {
   try {
     const { answer, points, roundId, quizId } = req.body;
     console.log(req.body);
+    if (typeof answer !== "string") {
+      return res.status(400).send({
+        message: "Please complete all the fields to create an answer",
+      });
+    }
     const newAnswer = await Answer.create(
       {
         answer,
@@ -126,12 +131,8 @@ router.post("/answer", authMiddleware, async (req, res) => {
       },
       { returning: true }
     );
-    if (!answer) {
-      return res
-        .status(400)
-        .send({ message: "Please complete all the fields to create a quiz" });
-    }
-    res.status(201).send({ message: "Answer added", newAnswer });
+
+    return res.status(201).send({ message: "Answer added", newAnswer });
   } catch (e) {
     console.log(e.message);
     next(e);
@@ -178,12 +179,12 @@ router.get("/quizzes/:id", authMiddleware, async (req, res, next) => {
   }
 });
 
-router.patch("/quizzes/:id", authMiddleware, async (req, res, next) => {
+router.patch("/update", authMiddleware, async (req, res, next) => {
   try {
-    const id = parseInt(req.params.id);
+    const { answer, points, roundId, quizId, answerId } = req.body;
+    const id = answerId;
     console.log(id);
     const quizAnswer = await Answer.findByPk(id, {});
-    const { answer, points, roundId, quizId } = req.body;
     console.log(req.body);
     const updatedAnswer = await quizAnswer.update(
       {
@@ -209,7 +210,7 @@ router.patch("/quizzes/:id", authMiddleware, async (req, res, next) => {
 router.delete("/quizzes/:id", authMiddleware, async (req, res, next) => {
   try {
     const { id } = req.params;
-    const user = req.user;
+    // const user = req.user;
     const quizAnswer = await Answer.findByPk(id);
     // if (user.id === quizAnswer.userId) {
     const deletedAnswer = await quizAnswer.destroy();
