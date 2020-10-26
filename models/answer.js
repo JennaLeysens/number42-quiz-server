@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
   answer.init(
     {
       answer: DataTypes.TEXT,
-      points: DataTypes.INTEGER,
+      points: DataTypes.FLOAT,
     },
     {
       sequelize,
