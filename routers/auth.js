@@ -71,7 +71,7 @@ router.post("/signup", async (req, res) => {
 router.post("/", authMiddleware, async (req, res) => {
   try {
     const user = req.user;
-    const { editionNumber, date, teamName, teamMembers } = req.body;
+    const { editionNumber, date, teamMembers, teamName } = req.body;
     if (!editionNumber || !date || !teamMembers) {
       return res
         .status(400)
@@ -80,8 +80,8 @@ router.post("/", authMiddleware, async (req, res) => {
     const newQuiz = await Quiz.create({
       editionNumber,
       date,
-      teamName,
       teamMembers,
+      teamName,
       userId: user.id,
     });
     const round = await Round.create({

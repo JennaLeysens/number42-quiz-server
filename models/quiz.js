@@ -17,8 +17,8 @@ module.exports = (sequelize, DataTypes) => {
     {
       editionNumber: DataTypes.STRING,
       date: DataTypes.STRING,
-      teamName: DataTypes.STRING,
       teamMembers: DataTypes.ARRAY(DataTypes.STRING),
+      teamName: DataTypes.STRING,
     },
     {
       sequelize,

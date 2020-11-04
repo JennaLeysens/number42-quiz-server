@@ -14,11 +14,11 @@ module.exports = {
       date: {
         type: Sequelize.STRING,
       },
-      teamName: {
-        type: Sequelize.STRING,
-      },
       teamMembers: {
         type: Sequelize.ARRAY(Sequelize.STRING),
+      },
+      teamName: {
+        type: Sequelize.STRING,
       },
       createdAt: {
         allowNull: false,
