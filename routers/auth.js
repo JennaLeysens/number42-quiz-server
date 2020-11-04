@@ -71,7 +71,7 @@ router.post("/signup", async (req, res) => {
 router.post("/", authMiddleware, async (req, res) => {
   try {
     const user = req.user;
-    const { editionNumber, date, teamMembers } = req.body;
+    const { editionNumber, date, teamMembers, teamName } = req.body;
     if (!editionNumber || !date || !teamMembers) {
       return res
         .status(400)
@@ -81,6 +81,7 @@ router.post("/", authMiddleware, async (req, res) => {
       editionNumber,
       date,
       teamMembers,
+      teamName,
       userId: user.id,
     });
     const round = await Round.create({
@@ -207,14 +208,33 @@ router.patch("/update", authMiddleware, async (req, res, next) => {
   }
 });
 
+// router.delete("/quizzes/:id", authMiddleware, async (req, res, next) => {
+//   try {
+//     const { id } = req.params;
+//     // const user = req.user;
+//     const quizAnswer = await Answer.findByPk(id);
+//     // if (user.id === quizAnswer.userId) {
+//     const deletedAnswer = await quizAnswer.destroy();
+//     res.status(201).send({ message: "Answer deleted", deletedAnswer });
+//     // } else {
+//     //   return res
+//     //     .status(400)
+//     //     .send("You are not authorized to delete this answer");
+//     // }
+//   } catch (e) {
+//     console.log(e.message);
+//     next(e);
+//   }
+// });
+
 router.delete("/quizzes/:id", authMiddleware, async (req, res, next) => {
   try {
     const { id } = req.params;
     // const user = req.user;
-    const quizAnswer = await Answer.findByPk(id);
+    const quiz = await Quiz.findByPk(id);
     // if (user.id === quizAnswer.userId) {
-    const deletedAnswer = await quizAnswer.destroy();
-    res.status(201).send({ message: "Answer deleted", deletedAnswer });
+    const deletedQuiz = await quiz.destroy();
+    res.status(201).send({ message: "Quiz deleted", deletedQuiz });
     // } else {
     //   return res
     //     .status(400)

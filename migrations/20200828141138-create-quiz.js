@@ -17,6 +17,9 @@ module.exports = {
       teamMembers: {
         type: Sequelize.ARRAY(Sequelize.STRING),
       },
+      teamName: {
+        type: Sequelize.STRING,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
